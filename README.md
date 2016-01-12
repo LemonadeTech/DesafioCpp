@@ -28,6 +28,6 @@ O desafio consiste na correção e refatoração do código disponível seguindo
 
 Qualquer duvida entrar em contato: **dev (at) itslemonade.com**
 
-**Objetivo Experado:**
+**Objetivo Esperado:**
 
 ![](doc/Exemplo.png)
