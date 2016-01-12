@@ -30,4 +30,4 @@ Qualquer duvida entrar em contato: **dev (at) itslemonade.com**
 
 **Objetivo Experado:**
 
-![](docs/Exemplo.png)
+![](doc/Exemplo.png)
