@@ -19,8 +19,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules" ${CMAKE_MODULE_PATH})
 include(FindPkgConfig)
 
 pkg_search_module(SDL2 REQUIRED sdl2)
+#find_package(SDL2 REQUIRED sdl2)
 if(SDL2_FOUND)
     include_directories(${SDL2_INCLUDE_DIRS})
+    if(APPLE)
+        # nastyyyy
+        set(SDL2_LIBRARIES /Library/Frameworks/SDL2.framework/SDL2)
+    endif(APPLE)
     target_link_libraries(${EXECUTABLE_NAME} ${SDL2_LIBRARIES})
 endif(SDL2_FOUND)
 
@@ -31,8 +36,18 @@ if (OPENGL_FOUND)
     target_link_libraries(${EXECUTABLE_NAME} m)
 endif(OPENGL_FOUND)
 
+# TODO do not find on osx
 find_package(GLEW REQUIRED)
 if (GLEW_FOUND)
     include_directories(${GLEW_INCLUDE_DIRS})
     target_link_libraries(${EXECUTABLE_NAME} ${GLEW_LIBRARIES})
 endif(GLEW_FOUND)
+
+
+file(COPY
+    ${CMAKE_CURRENT_SOURCE_DIR}/fighter.obj
+    ${CMAKE_CURRENT_SOURCE_DIR}/fighter.tga
+    ${CMAKE_CURRENT_SOURCE_DIR}/fragment.fsh
+    ${CMAKE_CURRENT_SOURCE_DIR}/vertex.vsh
+    DESTINATION
+    ${CMAKE_CURRENT_BINARY_DIR})

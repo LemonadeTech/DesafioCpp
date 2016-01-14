@@ -12,10 +12,11 @@ out vec3 inter_vertex;
 out vec3 inter_normal;
 
 uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
 
-void main(){
+void main() {
     inter_textureCoord = textureCoord;
-    
+
     inter_vertex = (modelViewMatrix * vec4(vertex, 1.0)).xyz;
     inter_normal = normalize(transpose(inverse(mat3(modelViewMatrix))) * normal);
 

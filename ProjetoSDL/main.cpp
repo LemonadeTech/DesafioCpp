@@ -16,6 +16,13 @@
 
 #define GLEW_STATIC
 #include <GL\glew.h>
+#elif defined(__linux__)
+//#include <GLES3/gl3.h>
+//#include <GLES3/gl3ext.h>
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <GL/glu.h>
 #else
 #include <OpenGL/gl3.h>
 #include <OpenGL/gl3ext.h>
@@ -76,8 +83,8 @@ static float rotY = 0.0f;
 static vec3 cameraPosition(0.0, 0.0, 5.0);
 static vec3 cameraTarget(0.0, 0.0, 0.0);
 
-void compileShader(){
-
+void compileShader()
+{
     ifstream ifsvsh("vertex.vsh");
     std::string vshader((std::istreambuf_iterator<char>(ifsvsh)), std::istreambuf_iterator<char>());
     const char *vshader_cstr = vshader.c_str();
@@ -95,6 +102,7 @@ void compileShader(){
         glGetShaderInfoLog(shader_vertex_shader, sizeof(log), nullptr, log);
         std::cout << "Vertex shader: " << log << std::endl;
         glDeleteShader(shader_vertex_shader);
+
         return;
     }
 
@@ -102,19 +110,23 @@ void compileShader(){
     std::string fshader((std::istreambuf_iterator<char>(ifsfsh)), std::istreambuf_iterator<char>());
     const char *fshader_cstr = fshader.c_str();
     shader_fragment_shader= glCreateShader(GL_FRAGMENT_SHADER);
+
     glShaderSource(shader_fragment_shader, 1, &fshader_cstr, NULL);
     glCompileShader(shader_fragment_shader);
-    
+
     compileStatus = GL_TRUE;
     glGetShaderiv(shader_fragment_shader, GL_COMPILE_STATUS, &compileStatus);
-    
+    std::cout << "BB" << std::endl;
+
     memset(log, 0, sizeof(log));
-    
+
     if (compileStatus == GL_FALSE) {
         glGetShaderInfoLog(shader_fragment_shader, sizeof(log), nullptr, log);
         std::cout << "Fragment shader: " << log << std::endl;
+
         glDeleteShader(shader_vertex_shader);
         glDeleteShader(shader_fragment_shader);
+
         return;
     }
 
@@ -131,6 +143,7 @@ void compileShader(){
         glDeleteShader(shader_vertex_shader);
         glDeleteShader(shader_fragment_shader);
         glDeleteProgram(shader_program);
+
         return;
     }
 
@@ -147,7 +160,8 @@ void compileShader(){
     light0Position_uniform = glGetUniformLocation(shader_program, "light0Position");
 }
 
-void loadTextures(){
+void loadTextures()
+{
     GLint texture0Width;
     GLint texture0Height;
     GLint texture0Components;
@@ -167,8 +181,9 @@ void loadTextures(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
-bool init(){
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0){
+bool init()
+{
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return false;
     }
@@ -180,35 +195,37 @@ bool init(){
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 16);
-    
+
     sdlWindow = SDL_CreateWindow("Projeto SDL!", 100, 100, windowWidth, windowHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (sdlWindow == nullptr){
+
+    if (sdlWindow == nullptr) {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+
         SDL_Quit();
         return false;
     }
 
     glContext = SDL_GL_CreateContext(sdlWindow);
 
-    if( glContext == NULL){
+    if (glContext == NULL) {
         printf( "OpenGL context could not be created! SDL Error: %s\n", SDL_GetError() );
         return false;
     }
 
+
     std::cout << "OpenGL v" << glGetString(GL_VERSION) << " using " << glGetString(GL_RENDERER) << std::endl;
 
-#ifdef _WIN32
+//# TODO
+//#ifdef _WIN32
     glewExperimental = GL_TRUE;
-    if (GLEW_OK != glewInit())
-    {
+    if (GLEW_OK != glewInit()) {
         return false;
     }
-#endif
+//#endif
 
     SDL_GL_SetSwapInterval(1);
-    
+
     compileShader();
-    
     {
         std::string inputfile = "fighter.obj";
 
@@ -218,27 +235,27 @@ bool init(){
             std::cerr << err << std::endl;
             exit(1);
         }
-        
+
         std::cout << "# of shapes    : " << shapes.size() << std::endl;
         std::cout << "# of materials : " << materials.size() << std::endl;
 
         glGenVertexArrays(1, &sphere_vertex_array);
         glBindVertexArray(sphere_vertex_array);
-        
+
         glGenBuffers(1, &sphere_vertex_buffer);
         glBindBuffer(GL_ARRAY_BUFFER, sphere_vertex_buffer);
         glBufferData(GL_ARRAY_BUFFER, shapes[shapdeIx].mesh.positions.size() * sizeof(float), &shapes[shapdeIx].mesh.positions[0], GL_STATIC_DRAW);
         glEnableVertexAttribArray(vertex_attribute);
         glVertexAttribPointer(vertex_attribute, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
-        
-        
+
+
         glGenBuffers(1, &sphere_normals_buffer);
         glBindBuffer(GL_ARRAY_BUFFER, sphere_normals_buffer);
         glBufferData(GL_ARRAY_BUFFER, shapes[shapdeIx].mesh.normals.size() * sizeof(float), &shapes[shapdeIx].mesh.normals[0], GL_STATIC_DRAW);
         glEnableVertexAttribArray(normal_attribute);
         glVertexAttribPointer(normal_attribute, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, BUFFER_OFFSET(0));
-        
-        
+
+
         glGenBuffers(1, &sphere_texture_buffer);
         glBindBuffer(GL_ARRAY_BUFFER, sphere_texture_buffer);
         glBufferData(GL_ARRAY_BUFFER, shapes[shapdeIx].mesh.texcoords.size() * sizeof(float), &shapes[shapdeIx].mesh.texcoords[0], GL_STATIC_DRAW);
@@ -259,11 +276,12 @@ bool init(){
     return true;
 }
 
-void render(){
+void render()
+{
     glViewport(0, 0, windowWidth, windowHeight);
-    
+
     glUseProgram(shader_program);
-    
+
     mat4 projection = mat4::Perspective(.78f, ((float)windowWidth)/windowHeight, .1f, 1000.0f);
     mat4 view = mat4::LookAt(cameraTarget,
                              cameraPosition,
@@ -272,7 +290,7 @@ void render(){
     mat3 rotation = mat3::RotationY(rotY);
     mat4 model = mat4::FromTranslationVector(vec3(0.0, 0.0, 8.0)) * mat4::FromRotationMatrix(rotation) * mat4::FromRotationMatrix(mat3::RotationX(1.));
     mat4 modelViewMatrix = model * view;
-    
+
     glUniformMatrix4fv(modelViewMatrix_uniform, 1, GL_FALSE, &modelViewMatrix[0]);
     glUniformMatrix4fv(projectionMatrix_uniform, 1, GL_FALSE, &projection[0]);
 
@@ -288,21 +306,20 @@ void render(){
     glBindVertexArray(sphere_vertex_array);
     glDrawElements(GL_TRIANGLES, (GLsizei)shapes[shapdeIx].mesh.indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET(0));
     glBindVertexArray(0);
-    
+
     rotY += 0.01f;
 }
 
-void mainLoop(){
-    
+void mainLoop()
+{
     bool mainLoop = true;
-    while(mainLoop){
+    while (mainLoop)
         render();
-    }
 }
 
 int main(int argc, const char * argv[]) {
-    if(init())
+    if (init())
         mainLoop();
-    
+
     return 0;
 }
