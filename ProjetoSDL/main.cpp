@@ -4,6 +4,7 @@
 //
 //  Copyright © 2016 Lemonade. All rights reserved.
 //
+//#define TINYOBJLOADER_IMPLEMENTATION // TODO
 
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -106,6 +107,7 @@ void compileShader()
         return;
     }
 
+    // AKI
     ifstream ifsfsh("fragment.fsh");
     std::string fshader((std::istreambuf_iterator<char>(ifsfsh)), std::istreambuf_iterator<char>());
     const char *fshader_cstr = fshader.c_str();
@@ -116,7 +118,6 @@ void compileShader()
 
     compileStatus = GL_TRUE;
     glGetShaderiv(shader_fragment_shader, GL_COMPILE_STATUS, &compileStatus);
-    std::cout << "BB" << std::endl;
 
     memset(log, 0, sizeof(log));
 
@@ -131,6 +132,7 @@ void compileShader()
     }
 
     shader_program = glCreateProgram();
+    //
     glAttachShader(shader_program, shader_vertex_shader);
     glAttachShader(shader_program, shader_fragment_shader);
     glLinkProgram(shader_program);
@@ -171,8 +173,10 @@ void loadTextures()
 
     glGenTextures(1, &texture0);
     glBindTexture(GL_TEXTURE_2D, texture0);
+    std::cout << texture0<< std::endl;
 
     glTexImage2D(GL_TEXTURE_2D, 0, texture0Components, texture0Width, texture0Height, 0, texture0Format, GL_UNSIGNED_BYTE, texture0Pixels);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -215,21 +219,21 @@ bool init()
 
     std::cout << "OpenGL v" << glGetString(GL_VERSION) << " using " << glGetString(GL_RENDERER) << std::endl;
 
-//# TODO
-//#ifdef _WIN32
+#if defined _WIN32 || defined __linux__
     glewExperimental = GL_TRUE;
     if (GLEW_OK != glewInit()) {
         return false;
     }
-//#endif
+#endif
 
     SDL_GL_SetSwapInterval(1);
 
     compileShader();
     {
+        //std::string inputfile = "millenium-falcon.obj";
         std::string inputfile = "fighter.obj";
 
-        std::string err = tinyobj::LoadObj(shapes, materials, inputfile.c_str());
+        string err = tinyobj::LoadObj(shapes, materials, inputfile.c_str());
 
         if (!err.empty()) {
             std::cerr << err << std::endl;
@@ -270,7 +274,13 @@ bool init()
     }
 
     glClearColor(.2, .2, .2, 1);
+
     glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glDisable(GL_BLEND);
+    //glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_NORMALIZE);//TODO need?
 
     loadTextures();
     return true;
@@ -278,6 +288,7 @@ bool init()
 
 void render()
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, windowWidth, windowHeight);
 
     glUseProgram(shader_program);
@@ -306,8 +317,21 @@ void render()
     glBindVertexArray(sphere_vertex_array);
     glDrawElements(GL_TRIANGLES, (GLsizei)shapes[shapdeIx].mesh.indices.size(), GL_UNSIGNED_INT, BUFFER_OFFSET(0));
     glBindVertexArray(0);
-
     rotY += 0.01f;
+
+    //glBegin(GL_TRIANGLES);
+        //glVertex3f(-1.0f, -0.5f, -4.0f);    // lower left vertex
+        //glVertex3f( 1.0f, -0.5f, -4.0f);    // lower right vertex
+        //glVertex3f( 0.0f,  0.5f, -4.0f);    // upper vertex
+    //glEnd();
+    //glBegin( GL_QUADS );
+        //glTexCoord2d(0.0,0.0); glVertex2d(0.0,0.0);
+        //glTexCoord2d(1.0,0.0); glVertex2d(1.0,0.0);
+        //glTexCoord2d(1.0,1.0); glVertex2d(1.0,1.0);
+        //glTexCoord2d(0.0,1.0); glVertex2d(0.0,1.0);
+    //glEnd();
+
+    SDL_GL_SwapWindow(sdlWindow);
 }
 
 void mainLoop()
