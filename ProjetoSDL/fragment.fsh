@@ -8,6 +8,7 @@ in vec3 inter_vertex;
 in vec3 inter_normal;
 
 uniform vec3 light0Position;
+uniform vec3 light0Color; //Faltava essa linha
 uniform sampler2D textUnit0;
 
 void main(){
