@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "tiny_obj_loader.h"
-#include <mathfu/glsl_mappings.h>
+#include "mathfu/glsl_mappings.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -39,6 +39,7 @@ public:
 
     bool init();
 
+    bool poll();
     void draw();
 
 private:
@@ -56,6 +57,9 @@ private:
     std::shared_ptr<SDL_Window> m_sdlWindow;
     SDL_GLContext m_glContext;
 
+    // NOTE: could have split on more classes, this is the reason I let
+    // these variables with comments on where they are used
+
     // compileShader, draw
     GLuint m_shaderProgram;
 
@@ -69,11 +73,9 @@ private:
     GLint m_textUnit0Uniform;
     GLint m_light0ColorUniform;
     GLint m_light0PositionUniform;
-    ///
 
     // loadTexture, draw
     GLuint m_texture0;
-    ///
 
     // loadObj, draw
     // BUFFER_OFFSET...
@@ -81,14 +83,13 @@ private:
     std::vector<tinyobj::shape_t> m_shapes;
     std::vector<tinyobj::material_t> m_materials;
     int m_shapdeIx = 0;
-    ///
+
     // draw
     vec3 m_cameraPosition;
     vec3 m_cameraTarget;
     float m_rotY = 0.0f;
     vec3 m_light0Pos;
     vec3 m_light0Color;
-    ///
 };
 
 #endif // __RENDER_H__

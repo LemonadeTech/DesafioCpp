@@ -276,6 +276,27 @@ void Render::loadTextures(const string &filename)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
+// returns 'false' only when user press Q or ESC
+bool Render::poll()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch(event.type) {
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_q ||
+                        event.key.keysym.sym == SDLK_ESCAPE)
+                    return false;
+                break;
+            case SDL_QUIT:
+                return false;
+                break;
+            default:
+                break;
+        }
+    }
+
+    return true;
+}
 void Render::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

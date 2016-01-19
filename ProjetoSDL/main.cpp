@@ -9,13 +9,20 @@
 
 #include "render.h"
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
     Render render(800, 600, "Projeto SDL!");
-    bool mainLoop = render.init();
 
-    // XXX poll event
-    while (mainLoop)
+    if (!render.init())
+        exit(1);
+
+    bool mainLoop = true;
+
+    while (mainLoop) {
+        if (render.poll() == false)
+            mainLoop = false;
+
         render.draw();
+    }
 
     return 0;
 }
