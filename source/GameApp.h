@@ -53,8 +53,8 @@ class GameApp
         bool m_keyDown;
         bool m_keyLeft;
         bool m_keyRight;
-        bool m_zoomIn;
-        bool m_zoomOut;
+        bool m_keyPgUp;
+        bool m_keyPgDown;
         float m_angleX;
         float m_angleY;
 

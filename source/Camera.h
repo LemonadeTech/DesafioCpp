@@ -7,44 +7,32 @@
 
 #ifndef CAMERA_H_
 #define CAMERA_H_
-
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
 class Camera {
 	public:
-		Camera(const glm::vec3 &position, float fov, float aspectRatio, float zNear, float zFar)
-		{
-			m_perpective = glm::perspective(fov, aspectRatio, zNear, zFar);
-			m_position = position;
-			m_forward = glm::vec3(0.0, 0.0 ,1.0);
-			m_up = glm::vec3(0.0, 1.0, 0.0);
-		}
+		Camera(const glm::vec3 &position, float fov, float aspectRatio, float zNear, float zFar);
+		virtual ~Camera() {};
 
-		virtual ~Camera() {}
+		glm::mat4 GetWorldToViewMatrix() const;
 
-		inline glm::mat4 GetViewProjection() const
-		{
-			return m_perpective * glm::lookAt(m_position, m_position+m_forward, m_up);
-		}
+		void MouseUpdate(int mouseX, int mouseY);
 
-		inline void SetZoomIn(void)
-		{
-			m_position.z -= 0.2f;
-		}
-
-		inline void SetZoomOut(void)
-		{
-			m_position.z += 0.2f;
-		}
-
+		void MoveForward();
+		void MoveBackward();
+		void MoveLeft();
+		void MoveRight();
+		void MoveUp();
+		void MoveDown();
 
 	private:
 
 		glm::mat4 m_perpective;
 		glm::vec3 m_position;
-		glm::vec3 m_forward;
+		glm::vec3 m_viewDirection;
 		glm::vec3 m_up;
+		glm::vec2 m_oldMousePosition;
 };
 
 #endif /* CAMERA_H_ */

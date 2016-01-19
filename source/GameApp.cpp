@@ -19,7 +19,6 @@ GameApp::GameApp(const std::string&title, unsigned int screenWidth, unsigned int
 	shader = NULL;
 	mesh = NULL;
 	transform = NULL;
-	m_counter = 0.0f;
 	camera = NULL;
 	texture = NULL;
 
@@ -27,11 +26,11 @@ GameApp::GameApp(const std::string&title, unsigned int screenWidth, unsigned int
     m_keyDown = false;
     m_keyLeft = false;
     m_keyRight = false;
-    m_zoomIn = false;
-    m_zoomOut = false;
+    m_keyPgUp = false;
+    m_keyPgDown = false;
 
     m_angleX = -60.0f;
-    m_angleY = 140.0f;
+    m_angleY = 0.0f;
 }
 
 /*################################################################################*/
@@ -103,7 +102,7 @@ void GameApp::InitSystem(void)
 
     transform = new Transform();
 
-    camera = new Camera(glm::vec3(0.0, 0.0, -2.3), 70.0f, (float)m_screenWidth/(float)m_screenHeight, 0.01f, 1000.0f);
+    camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f), 70.0f, (float)m_screenWidth/(float)m_screenHeight, 0.01f, 1000.0f);
 	transform->GetRotation().x = m_angleX;
 	transform->GetRotation().y = m_angleY;
 }
@@ -145,19 +144,20 @@ void GameApp::Run(void)
             	if (event.key.keysym.sym == SDLK_DOWN) m_keyDown = true;
             	if (event.key.keysym.sym == SDLK_LEFT) m_keyLeft = true;
             	if (event.key.keysym.sym == SDLK_RIGHT) m_keyRight = true;
+            	if (event.key.keysym.sym == SDLK_PAGEUP) m_keyPgUp = true;
+            	if (event.key.keysym.sym == SDLK_PAGEDOWN) m_keyPgDown = true;
                 break;
             case SDL_KEYUP:
             	if (event.key.keysym.sym == SDLK_UP) m_keyUp = false;
             	if (event.key.keysym.sym == SDLK_DOWN) m_keyDown = false;
             	if (event.key.keysym.sym == SDLK_LEFT) m_keyLeft = false;
             	if (event.key.keysym.sym == SDLK_RIGHT) m_keyRight = false;
+            	if (event.key.keysym.sym == SDLK_PAGEUP) m_keyPgUp = false;
+            	if (event.key.keysym.sym == SDLK_PAGEDOWN) m_keyPgDown = false;
                 break;
-            case SDL_MOUSEWHEEL:
-                if (event.wheel.y < 0) {
-                	m_zoomIn = true;
-                } else {
-                	m_zoomOut = true;
-                }
+            case SDL_MOUSEMOTION:
+                camera->MouseUpdate(event.motion.x, event.motion.y);
+                break;
             break;
             case SDL_QUIT:
                 m_done = true;
@@ -192,29 +192,26 @@ void GameApp::RenderFrame(void)
 	glClearColor(0.0f, 0.15f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// Ship rotate
+	transform->GetRotation().y = m_counter*20;
+
 	if (m_keyUp) {
-		m_angleX -= 2.0f;
-		transform->GetRotation().x = m_angleX;
+		camera->MoveForward();
 	}
 	else if (m_keyDown) {
-		m_angleX += 2.0f;
-		transform->GetRotation().x = m_angleX;
+		camera->MoveBackward();
 	}
 	if (m_keyLeft) {
-		m_angleY -= 2.0f;
-		transform->GetRotation().y = m_angleY;
+		camera->MoveLeft();
 	}
 	else if (m_keyRight) {
-		m_angleY += 2.0f;
-		transform->GetRotation().y = m_angleY;
+		camera->MoveRight();
 	}
-	if (m_zoomIn) {
-		camera->SetZoomIn();
-		m_zoomIn = false;
+	if (m_keyPgUp) {
+		camera->MoveUp();
 	}
-	else if (m_zoomOut) {
-		camera->SetZoomOut();
-		m_zoomOut = false;
+	else if (m_keyPgDown) {
+		camera->MoveDown();
 	}
 
 	shader->Bind();
