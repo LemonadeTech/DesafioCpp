@@ -24,8 +24,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/modules" ${CMAKE_MODULE_PATH})
 include(FindPkgConfig)
 
 pkg_search_module(SDL2 REQUIRED sdl2)
-#TODO
-#find_package(SDL2 REQUIRED sdl2)
 if(SDL2_FOUND)
     include_directories(${SDL2_INCLUDE_DIRS})
     if(APPLE)
@@ -42,13 +40,11 @@ if (OPENGL_FOUND)
     target_link_libraries(${EXECUTABLE_NAME} m)
 endif(OPENGL_FOUND)
 
-if(NOT APPLE)
-    find_package(GLEW REQUIRED)
-    if (GLEW_FOUND)
-        include_directories(${GLEW_INCLUDE_DIRS})
-        target_link_libraries(${EXECUTABLE_NAME} ${GLEW_LIBRARIES})
-    endif(GLEW_FOUND)
-endif(NOT APPLE)
+find_package(GLEW REQUIRED)
+if (GLEW_FOUND)
+    include_directories(${GLEW_INCLUDE_DIRS})
+    target_link_libraries(${EXECUTABLE_NAME} ${GLEW_LIBRARIES})
+endif(GLEW_FOUND)
 
 
 file(COPY

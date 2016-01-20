@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 #include "render.h"
 #include "tga.h"
@@ -36,7 +37,8 @@ bool Render::init()
         return false;
     }
 
-    // not working properly on my machine (linux AMD 7700M)
+    // not working properly on my linux machine
+    // (OpenGL v4.1.13399 Core Profile Context 15.201.1151 using AMD Radeon HD 7700M Series)
     //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     //SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
@@ -95,7 +97,6 @@ bool Render::init()
     return true;
 }
 
-#include <fstream>
 void Render::compileShader(const std::string &shader, const std::string &frag)
 {
     GLuint shaderVertexShader;
