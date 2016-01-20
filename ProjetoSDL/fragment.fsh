@@ -7,11 +7,11 @@ in vec2 inter_textureCoord;
 in vec3 inter_vertex;
 in vec3 inter_normal;
 
+uniform vec3 light0Color;
 uniform vec3 light0Position;
 uniform sampler2D textUnit0;
 
-void main(){
-
+void main() {
     vec3 L = normalize(light0Position - inter_vertex);
     float lightIntensity = max(dot(normalize(inter_normal), L), 0.0);
 
