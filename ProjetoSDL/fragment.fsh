@@ -2,6 +2,7 @@
 #version 400
 out vec4 fragColor;
 uniform vec4 color;
+uniform vec3 light0Color;
 
 in vec2 inter_textureCoord;
 in vec3 inter_vertex;

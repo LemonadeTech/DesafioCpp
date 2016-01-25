@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		75BEF1E41C565380007B55C9 /* MainWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75BEF1E21C565380007B55C9 /* MainWindow.cpp */; settings = {COMPILER_FLAGS = "-v"; }; };
+		75BEF1E61C5653AE007B55C9 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 75BEF1E51C5653AE007B55C9 /* SDL2.framework */; };
+		75BEF1E71C565408007B55C9 /* MainWindow.h in Sources */ = {isa = PBXBuildFile; fileRef = 75BEF1E31C565380007B55C9 /* MainWindow.h */; };
 		AA66C7031BEBAC7C00A25B0A /* tiny_obj_loader.cc in Sources */ = {isa = PBXBuildFile; fileRef = AA66C7011BEBAC7C00A25B0A /* tiny_obj_loader.cc */; };
 		AA66C70F1BECBBDB00A25B0A /* fighter.obj in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA66C70D1BECBBD300A25B0A /* fighter.obj */; };
 		AA66C7111BECBD9300A25B0A /* fighter.tga in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA66C7101BECBD8F00A25B0A /* fighter.tga */; };
@@ -33,6 +36,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		75BEF1E21C565380007B55C9 /* MainWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainWindow.cpp; sourceTree = "<group>"; };
+		75BEF1E31C565380007B55C9 /* MainWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainWindow.h; sourceTree = "<group>"; };
+		75BEF1E51C5653AE007B55C9 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
 		AA66C6FC1BEB754000A25B0A /* tga.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tga.h; sourceTree = "<group>"; };
 		AA66C7011BEBAC7C00A25B0A /* tiny_obj_loader.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tiny_obj_loader.cc; path = tinyobjloader/tiny_obj_loader.cc; sourceTree = "<group>"; };
 		AA66C7021BEBAC7C00A25B0A /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiny_obj_loader.h; path = tinyobjloader/tiny_obj_loader.h; sourceTree = "<group>"; };
@@ -50,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75BEF1E61C5653AE007B55C9 /* SDL2.framework in Frameworks */,
 				AA76064A1BEA31D1005A783D /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,6 +76,7 @@
 		AA7606361BEA1B2B005A783D = {
 			isa = PBXGroup;
 			children = (
+				75BEF1E51C5653AE007B55C9 /* SDL2.framework */,
 				AA7606411BEA1B2B005A783D /* ProjetoSDL */,
 				AA7606491BEA31D1005A783D /* OpenGL.framework */,
 				AA66C7001BEBAC6800A25B0A /* tinyobjloader */,
@@ -87,6 +95,8 @@
 		AA7606411BEA1B2B005A783D /* ProjetoSDL */ = {
 			isa = PBXGroup;
 			children = (
+				75BEF1E21C565380007B55C9 /* MainWindow.cpp */,
+				75BEF1E31C565380007B55C9 /* MainWindow.h */,
 				AA66C7101BECBD8F00A25B0A /* fighter.tga */,
 				AA66C70D1BECBBD300A25B0A /* fighter.obj */,
 				AA7606421BEA1B2B005A783D /* main.cpp */,
@@ -153,6 +163,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				75BEF1E71C565408007B55C9 /* MainWindow.h in Sources */,
+				75BEF1E41C565380007B55C9 /* MainWindow.cpp in Sources */,
 				AA66C7031BEBAC7C00A25B0A /* tiny_obj_loader.cc in Sources */,
 				AA7606431BEA1B2B005A783D /* main.cpp in Sources */,
 			);
@@ -243,13 +255,26 @@
 		AA7606471BEA1B2B005A783D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/sdl",
+				);
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
 					"$(PROJECT_DIR)/mathfu/include",
 					"$(PROJECT_DIR)/vectorial/include",
+					"$(PROJECT_DIR)/ProjetoSDL",
+					"$(PROJECT_DIR)/**",
 				);
-				LIBRARY_SEARCH_PATHS = /opt/local/lib;
-				OTHER_LDFLAGS = "-lsdl2";
+				LIBRARY_SEARCH_PATHS = (
+					/opt/local/lib,
+					"$(LOCAL_LIBRARY_DIR)/Frameworks/SDL2.framework/Versions/A",
+					"$(PROJECT_DIR)/**",
+				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -257,13 +282,25 @@
 		AA7606481BEA1B2B005A783D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/sdl",
+				);
 				HEADER_SEARCH_PATHS = (
 					/opt/local/include,
 					"$(PROJECT_DIR)/mathfu/include",
 					"$(PROJECT_DIR)/vectorial/include",
+					"$(PROJECT_DIR)/ProjetoSDL",
+					"$(PROJECT_DIR)/**",
 				);
-				LIBRARY_SEARCH_PATHS = /opt/local/lib;
-				OTHER_LDFLAGS = "-lsdl2";
+				LIBRARY_SEARCH_PATHS = (
+					/opt/local/lib,
+					"$(LOCAL_LIBRARY_DIR)/Frameworks/SDL2.framework/Versions/A",
+					"$(PROJECT_DIR)/**",
+				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

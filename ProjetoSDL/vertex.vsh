@@ -12,6 +12,7 @@ out vec3 inter_vertex;
 out vec3 inter_normal;
 
 uniform mat4 projectionMatrix;
+uniform mat4 modelViewMatrix;
 
 void main(){
     inter_textureCoord = textureCoord;
